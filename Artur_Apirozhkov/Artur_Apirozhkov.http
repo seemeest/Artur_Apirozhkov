@@ -1,0 +1,6 @@
+@Artur_Apirozhkov_HostAddress = http://localhost:5151
+
+GET {{Artur_Apirozhkov_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

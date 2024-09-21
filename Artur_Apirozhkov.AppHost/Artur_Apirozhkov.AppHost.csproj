@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+    <UserSecretsId>ec1a5502-5c3b-42a8-8135-08bcc680fee6</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="8.2.0" />
+    <PackageReference Include="VkNet" Version="1.78.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Artur_Apirozhkov\Artur_Apirozhkov.csproj" />
+  </ItemGroup>
+
+</Project>
