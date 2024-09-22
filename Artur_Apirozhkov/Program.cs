@@ -7,7 +7,7 @@ using System.Diagnostics;
 using VkNet;
 using VkNet.Model;
 //PS Ветка 3 потоки
-
+//не забудь отдельно либу c++
 
 
 
