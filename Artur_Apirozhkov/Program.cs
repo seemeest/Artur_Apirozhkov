@@ -1,14 +1,14 @@
-
-
 using Artur_Apirozhkov.VkApiCore.Services;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using System.Diagnostics;
 using VkNet;
 using VkNet.Model;
+
 var builder = WebApplication.CreateBuilder(args);
-IConfiguration configuration;
-configuration = builder.Configuration;
-///Часть Вк
+IConfiguration configuration = builder.Configuration;
+
+/// Часть ВК
 
 VkApi api = new VkApi();
 
@@ -21,26 +21,25 @@ api.Authorize(new ApiAuthParams
 
 Console.WriteLine("Успешная авторизация");
 
-Stopwatch stopwatch = new Stopwatch();
-stopwatch.Start();
-
 var userService = new UserService(api);
-var user = await userService.GetUserAsync(236667961);
 
-var fileWriter = new FileWriter();
-fileWriter.WriteJson(@"SaveData\1.json", user.FilterUserModel);
-fileWriter.WriteJson(@"SaveData\2.json", user.UserPhoto);
-fileWriter.WriteJson(@"SaveData\3.json", user);
+// Запускаем задачу для работы с VK API в отдельном потоке
+Task.Run(async () =>
+{
+    Stopwatch stopwatch = new Stopwatch();
+    stopwatch.Start();
 
-Console.WriteLine("Данные сохранены");
-stopwatch.Stop();
-Console.WriteLine($"Время выполнения: {stopwatch.ElapsedMilliseconds} мс");
+    var user = await userService.GetUserAsync(236667961);
 
-///Часть ASP
 
+    Console.WriteLine("Данные сохранены");
+    stopwatch.Stop();
+    Console.WriteLine($"Время выполнения: {stopwatch.ElapsedMilliseconds} мс");
+});
+
+/// Часть ASP
 
 builder.AddServiceDefaults();
-
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -48,6 +47,7 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Настройка API и маршрутизации
 app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
@@ -57,9 +57,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
 
+// Запускаем сервер в основном потоке
 app.Run();

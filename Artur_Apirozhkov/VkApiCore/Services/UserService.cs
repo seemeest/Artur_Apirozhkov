@@ -20,15 +20,25 @@ namespace Artur_Apirozhkov.VkApiCore.Services
                 throw new Exception("Профиль пользователя скрыт");
             }
 
-            var friends =  _vkClient.GetUserFriends(vkId);
-            var posts = _vkClient.GetUserPosts(vkId);
-            var groups = _vkClient.GetUserGroups(vkId);
-            var photos = _vkClient.GetUserPhotos(vkId);
+            // Запускаем задачи параллельно
+            var friendsTask = _vkClient.GetUserFriends(vkId);
+            var postsTask = _vkClient.GetUserPosts(vkId);
+            var groupsTask = _vkClient.GetUserGroups(vkId);
+            var photosTask = _vkClient.GetUserPhotos(vkId);
 
-            // Преобразование данных пользователя в DTO
+            // Ожидаем завершения всех задач
+            await Task.WhenAll(friendsTask, postsTask, groupsTask, photosTask);
+
+            // Получаем результаты
+            var friends = await friendsTask;
+            var posts = await postsTask;
+            var groups = await groupsTask;
+            var photos = await photosTask;
+
             var userDto = ConvertToUserModel(user, posts, groups, friends, photos);
             return userDto;
         }
+
         private UserData ConvertToUserModel(User user, List<WallPostDTO> posts, List<GroupDTO> groups, List<FriendDTO> friends, List<UserPhotoDTO> photos)
         {
             var postLikesCount = posts.Sum(p => p.CountLikes);
