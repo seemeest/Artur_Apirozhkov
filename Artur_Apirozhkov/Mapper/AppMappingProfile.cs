@@ -11,7 +11,6 @@ namespace Artur_Apirozhkov.Mapper
             CreateMap<Artur_Apirozhkov.VkApiCore.Models.GroupDTO, Artur_Apirozhkov.BdModels.Group>();
             CreateMap<Artur_Apirozhkov.VkApiCore.Models.UserModel, Artur_Apirozhkov.BdModels.UserModel>();
             CreateMap<Artur_Apirozhkov.VkApiCore.Models.UserPhotoDTO, Artur_Apirozhkov.BdModels.UserPhoto>();
-            CreateMap<Artur_Apirozhkov.VkApiCore.Models.WallPostDTO, Artur_Apirozhkov.BdModels.WallPost>();
         }
     }
 }

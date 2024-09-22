@@ -5,8 +5,8 @@ using System.Diagnostics;
 using VkNet;
 using VkNet.Model;
 
-var builder = WebApplication.CreateBuilder(args);
-IConfiguration configuration = builder.Configuration;
+//var builder = WebApplication.CreateBuilder(args);
+//IConfiguration configuration = builder.Configuration;
 
 /// Часть ВК
 
@@ -24,8 +24,7 @@ Console.WriteLine("Успешная авторизация");
 var userService = new UserService(api);
 
 // Запускаем задачу для работы с VK API в отдельном потоке
-Task.Run(async () =>
-{
+
     Stopwatch stopwatch = new Stopwatch();
     stopwatch.Start();
 
@@ -35,30 +34,30 @@ Task.Run(async () =>
     Console.WriteLine("Данные сохранены");
     stopwatch.Stop();
     Console.WriteLine($"Время выполнения: {stopwatch.ElapsedMilliseconds} мс");
-});
 
-/// Часть ASP
 
-builder.AddServiceDefaults();
+///// Часть ASP
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//builder.AddServiceDefaults();
 
-var app = builder.Build();
+//builder.Services.AddControllers();
+//builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddSwaggerGen();
 
-// Настройка API и маршрутизации
-app.MapDefaultEndpoints();
+//var app = builder.Build();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+//// Настройка API и маршрутизации
+//app.MapDefaultEndpoints();
 
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
+//if (app.Environment.IsDevelopment())
+//{
+//    app.UseSwagger();
+//    app.UseSwaggerUI();
+//}
 
-// Запускаем сервер в основном потоке
-app.Run();
+//app.UseHttpsRedirection();
+//app.UseAuthorization();
+//app.MapControllers();
+
+//// Запускаем сервер в основном потоке
+//app.Run();
