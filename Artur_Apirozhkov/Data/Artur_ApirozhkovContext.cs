@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Artur_Apirozhkov.Data
+namespace Artur_Apirozhkov.BdModels
 {
     public class Artur_ApirozhkovContext : DbContext
     {

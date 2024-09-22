@@ -13,6 +13,7 @@
         public string Activities { get; set; }
         public string Interest { get; set; }
         public int friendsCount { get; set; }
+        public EducationDTO Education { get; set; }
         public List<GroupDTO> Grouplist { get; set; }
         public List<FriendDTO> FriendsOfTheUser { get; set; }
         public List<UserPhotoDTO> UserPhoto { get; set; }

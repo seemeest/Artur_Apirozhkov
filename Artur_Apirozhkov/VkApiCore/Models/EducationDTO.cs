@@ -4,6 +4,10 @@ namespace Artur_Apirozhkov.VkApiCore.Models
 {
     public class EducationDTO
     {
+        public EducationDTO()
+        {
+        }
+
         public EducationDTO(Education education)
         {
             if (education != null)

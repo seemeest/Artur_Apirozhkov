@@ -1,4 +1,5 @@
-﻿using Artur_Apirozhkov.VkApiCore.Models;
+﻿using Artur_Apirozhkov.BdModels;
+using Artur_Apirozhkov.VkApiCore.Models;
 using VkNet;
 using VkNet.Model;
 
@@ -25,6 +26,7 @@ namespace Artur_Apirozhkov.VkApiCore.Services
             var postsTask = _vkClient.GetUserPosts(vkId);
             var groupsTask = _vkClient.GetUserGroups(vkId);
             var photosTask = _vkClient.GetUserPhotos(vkId);
+         
 
             // Ожидаем завершения всех задач
             await Task.WhenAll(friendsTask, postsTask, groupsTask, photosTask);
@@ -36,6 +38,15 @@ namespace Artur_Apirozhkov.VkApiCore.Services
             var photos = await photosTask;
 
             var userDto = ConvertToUserModel(user, posts, groups, friends, photos);
+            //using (VkParserContext vkParserContext = new VkParserContext())
+            //{
+
+            //    vkParserContext.UserModels.Add(new BdModels.UserModel
+            //    {
+            //        UserFriends= friends,
+            //    }
+
+            //}
             return userDto;
         }
 
@@ -62,7 +73,9 @@ namespace Artur_Apirozhkov.VkApiCore.Services
                     Grouplist = groups,
                     FriendsOfTheUser = friends,
                     UserPhoto = photos,
-                    UserPosts = posts
+                    UserPosts = posts,
+                    Education=new EducationDTO(user.Education)
+                    
                 },
                 UserPhoto = photos
             };
