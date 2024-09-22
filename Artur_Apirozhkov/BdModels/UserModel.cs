@@ -28,6 +28,8 @@ public partial class UserModel
     public string? Interest { get; set; }
 
     public int? FriendsCount { get; set; }
+    public int? Age { get; set; }
+    public string DataOfBirth { get; set; }
 
     public virtual ICollection<Education> Educations { get; set; } = new List<Education>();
 

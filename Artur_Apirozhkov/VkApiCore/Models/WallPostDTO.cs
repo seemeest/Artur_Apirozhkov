@@ -11,6 +11,6 @@
         public int CountLikes { get; set; }
         public int CountReposts { get; set; }
 
-        public bool friend { get; set; } //true\false от друга ли пост?
+        public bool friend { get; set; } 
     }
 }

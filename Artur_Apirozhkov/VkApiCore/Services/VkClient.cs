@@ -37,6 +37,7 @@ namespace Artur_Apirozhkov.VkApiCore.Services
         ProfileFields.RelationPartner |
         ProfileFields.Activities |
         ProfileFields.About |
+        ProfileFields.BirthDate |
         ProfileFields.Quotes |
         ProfileFields.Career |
         ProfileFields.FriendStatus |
@@ -84,27 +85,34 @@ namespace Artur_Apirozhkov.VkApiCore.Services
 
         public async Task<List<WallPostDTO>> GetUserPosts(long vkId)
         {
-            var posts = await _api.Wall.GetAsync(new WallGetParams
+            try
             {
-                OwnerId = vkId,
-                Count = 100,
-                Filter = VkNet.Enums.StringEnums.WallFilter.Owner
-            });
-
-            var postList = new List<WallPostDTO>(posts.WallPosts.Count);
-            for (int i = 0; i < posts.WallPosts.Count; i++)
-            {
-                var post = posts.WallPosts[i];
-                postList.Add(new WallPostDTO
+                var posts = await _api.Wall.GetAsync(new WallGetParams
                 {
-                    VkUserid = post.FromId,
-                    Date = post.Date,
-                    Text = post.Text,
-                    CountLikes = post.Likes.Count,
-                    CountReposts = post.Reposts.Count
+                    OwnerId = vkId,
+                    Count = 100,
+                    Filter = VkNet.Enums.StringEnums.WallFilter.Owner
                 });
+
+                var postList = new List<WallPostDTO>(posts.WallPosts.Count);
+                for (int i = 0; i < posts.WallPosts.Count; i++)
+                {
+                    var post = posts.WallPosts[i];
+                    postList.Add(new WallPostDTO
+                    {
+                        VkUserid = post.FromId,
+                        Date = post.Date,
+                        Text = post.Text,
+                        CountLikes = post.Likes.Count,
+                        CountReposts = post.Reposts.Count
+                    });
+                }
+                return postList;
             }
-            return postList;
+            catch
+            {
+                return null;
+            }
         }
 
 

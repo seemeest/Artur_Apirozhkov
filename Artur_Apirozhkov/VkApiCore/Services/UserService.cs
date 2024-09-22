@@ -3,6 +3,7 @@ using Artur_Apirozhkov.Mapper;
 using Artur_Apirozhkov.VkApiCore.Models;
 using AutoMapper;
 using AutoMapper.Execution;
+using System.Globalization;
 using VkNet;
 using VkNet.Model;
 
@@ -19,12 +20,47 @@ namespace Artur_Apirozhkov.VkApiCore.Services
            var _mapper= config.CreateMapper();
 
         }
+
+        public static int? CalculateAge(string dateOfBirthString)
+        {
+            if(string.IsNullOrWhiteSpace(dateOfBirthString)) return null;
+            // Проверяем, содержит ли строка год рождения
+            string[] dateParts = dateOfBirthString.Split('.');
+
+            if (dateParts.Length < 3)
+            {
+                // Год отсутствует, возраст невозможно вычислить
+                return null;
+            }
+
+            // Преобразуем строку в дату
+            DateTime dateOfBirth;
+            bool parsed = DateTime.TryParseExact(dateOfBirthString, "d.M.yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out dateOfBirth);
+
+            if (!parsed)
+            {
+                // Если дата не была корректно распознана
+                return null;
+            }
+
+            // Вычисляем возраст
+            DateTime today = DateTime.Today;
+            int age = today.Year - dateOfBirth.Year;
+
+            // Если день рождения ещё не наступил в этом году, уменьшаем возраст на 1
+            if (dateOfBirth > today.AddYears(-age))
+            {
+                age--;
+            }
+
+            return age;
+        }
         public async Task<UserData> GetUserAsync(long vkId)
         {
             var user = _vkClient.GetUserProfile(vkId);
             if (user.IsClosed is true)
             {
-                throw new Exception("Профиль пользователя скрыт");
+                return null;
             }
 
             // Запускаем задачи параллельно
@@ -66,8 +102,6 @@ namespace Artur_Apirozhkov.VkApiCore.Services
                 var config = new MapperConfiguration(cfg => cfg.AddProfile<AppMappingProfile>());
                 var _mapper = config.CreateMapper();
 
-                
-
                 vkParserContext.UserModels.Add(new BdModels.UserModel
                 {
                     AvatarPhotoUrl = _vkClient.GetAvatarPhotoUrl(user.PhotoId, user.Id),
@@ -85,7 +119,9 @@ namespace Artur_Apirozhkov.VkApiCore.Services
                     Groups = _mapper.Map<ICollection<Artur_Apirozhkov.BdModels.Group>>(groups),
                     Friends = _mapper.Map<ICollection<Friend>>(friends),
                     UserPhotos = _mapper.Map<ICollection<UserPhoto>>(photos),
-                    WallPosts = postsList
+                    WallPosts = postsList,
+                    DataOfBirth=user.BirthDate,
+                    Age= CalculateAge(user.BirthDate)
 
                 });
                 vkParserContext.SaveChanges();

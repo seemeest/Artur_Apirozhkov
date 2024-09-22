@@ -1,16 +1,19 @@
+using Artur_Apirozhkov.BdModels;
 using Artur_Apirozhkov.VkApiCore.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System.Diagnostics;
 using VkNet;
 using VkNet.Model;
+//PS Ветка 3 потоки
 
-//var builder = WebApplication.CreateBuilder(args);
-//IConfiguration configuration = builder.Configuration;
 
-/// Часть ВК
+
 
 VkApi api = new VkApi();
+
+//Отключил брать из конфига
 
 string AccessToken = "vk1.a.yp00MhbuZuKhghuSqH7vz4e4BF5hPVNtfPqJicjw674XGqZlU9qtMpAH5Ni_PNACFpc4WolU2sN5PMcLDxC2-3eSmBV6bi-qUgjOtIQIVCU9jJunksceewEZl7mT_bE4UFgqkEiQLN3fSfHh4CA5oqPfHW-m2tNNzxfECIk05v7GEL-AHCAXXnb526Klr9aksdky-ZQC_UhXgreuBcRqlQ";
 
@@ -23,20 +26,17 @@ Console.WriteLine("Успешная авторизация");
 
 var userService = new UserService(api);
 
-// Запускаем задачу для работы с VK API в отдельном потоке
-
-    Stopwatch stopwatch = new Stopwatch();
-    stopwatch.Start();
-
-    var user = await userService.GetUserAsync(236667961);
+SearchServices search = new SearchServices(api);
+search.Search();
 
 
-    Console.WriteLine("Данные сохранены");
-    stopwatch.Stop();
-    Console.WriteLine($"Время выполнения: {stopwatch.ElapsedMilliseconds} мс");
 
+
+// отключено так как не используем ии 
 
 ///// Часть ASP
+//var builder = WebApplication.CreateBuilder(args);
+//IConfiguration configuration = builder.Configuration;
 
 //builder.AddServiceDefaults();
 
